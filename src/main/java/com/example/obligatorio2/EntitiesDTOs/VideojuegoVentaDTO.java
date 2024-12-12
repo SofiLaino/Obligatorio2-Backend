@@ -28,6 +28,10 @@ public class VideojuegoVentaDTO {
         this.cantidad = cantidad;
     }
 
+    public VideojuegoVentaDTO() {
+
+    }
+
     // Getters y Setters
 
     public int getId() {

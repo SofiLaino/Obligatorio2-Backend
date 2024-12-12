@@ -15,4 +15,6 @@ public interface VentaService {
     VentaDTO getVentaDTOById(int id);
     List<VentaDTO> getVentasPorUsuario(int usuarioId);
     List<VentaDTO> getVentasPorFecha(Date fechainicio, Date fechaFin);
+
+    List<VentaDTO> getVentasPorUsuarioId(int usuarioId);
 }

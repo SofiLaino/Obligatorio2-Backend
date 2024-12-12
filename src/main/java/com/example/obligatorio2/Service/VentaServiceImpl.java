@@ -73,13 +73,7 @@ public class VentaServiceImpl implements VentaService {
         return convertToDTO(venta);
     }
 
-    /**
-     * Convierte una entidad VentaEntity a su correspondiente DTO VentaDTO.
-     *
-     * @param venta La entidad VentaEntity a convertir.
-     * @return El DTO VentaDTO convertido.
-     */
-    private VentaDTO convertToDTO(VentaEntity venta) {
+     private VentaDTO convertToDTO(VentaEntity venta) {
         List<VideojuegoVentaDTO> videojuegoVentaDTOs = Optional.ofNullable(venta.getVideojuegosVendidos())
                 .orElse(new ArrayList<>()) // Asegura que no sea nulo
                 .stream()
@@ -94,13 +88,7 @@ public class VentaServiceImpl implements VentaService {
         );
     }
 
-    /**
-     * Convierte una entidad VideojuegoVentaEntity a su correspondiente DTO VideojuegoVentaDTO.
-     *
-     * @param videojuegoVenta La entidad VideojuegoVentaEntity a convertir.
-     * @return El DTO VideojuegoVentaDTO convertido.
-     */
-    private VideojuegoVentaDTO convertVideojuegoVentaToDTO(VideojuegoVentaEntity videojuegoVenta) {
+     private VideojuegoVentaDTO convertVideojuegoVentaToDTO(VideojuegoVentaEntity videojuegoVenta) {
         return new VideojuegoVentaDTO(
                 videojuegoVenta.getVideojuego().getId(),
                 videojuegoVenta.getVideojuego().getNombre(),
@@ -108,5 +96,34 @@ public class VentaServiceImpl implements VentaService {
                 videojuegoVenta.getVideojuego().getImagenURL(),
                 videojuegoVenta.getCantidad()
         );
+    }
+
+    @Override
+    public List<VentaDTO> getVentasPorUsuarioId(int usuarioId) {
+        // Obtener las ventas del usuario desde el repositorio
+        List<VentaEntity> ventas = ventaRepository.findByUsuarioId(usuarioId);
+
+        // Mapear las entidades de Venta a DTOs
+        return ventas.stream()
+                .map(venta -> {
+                    VentaDTO ventaDTO = new VentaDTO();
+                    ventaDTO.setId(venta.getId());
+                    ventaDTO.setFechaCompra(venta.getFechaCompra());
+                    ventaDTO.setUsuario(venta.getUsuario());
+                    ventaDTO.setVideojuegoVentas(
+                            venta.getVideojuegosVendidos().stream()
+                                    .map(videojuego -> {
+                                        VideojuegoVentaDTO videojuegoDTO = new VideojuegoVentaDTO();
+                                        videojuegoDTO.setId(videojuego.getVideojuego().getId());
+                                        videojuegoDTO.setNombre(videojuego.getVideojuego().getNombre());
+                                        videojuegoDTO.setPrecio(videojuego.getVideojuego().getPrecio());
+                                        videojuegoDTO.setCantidad(videojuego.getCantidad());
+                                        return videojuegoDTO;
+                                    })
+                                    .collect(Collectors.toList())
+                    );
+                    return ventaDTO;
+                })
+                .collect(Collectors.toList());
     }
 }

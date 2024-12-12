@@ -30,6 +30,10 @@ public class VentaDTO {
         this.videojuegoVentas = videojuegoVentas;
     }
 
+    public VentaDTO() {
+
+    }
+
     // Getters
 
     public int getId() {

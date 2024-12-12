@@ -132,4 +132,16 @@ public class VentaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al eliminar la venta.");
         }
     }
+
+    @GetMapping("/usuarios/{usuarioId}/ventas")
+    public ResponseEntity<?> getVentasPorUsuario(@PathVariable int usuarioId) {
+        System.out.println("Solicitando ventas para el usuario: " + usuarioId);
+        try {
+            List<VentaDTO> ventas = ventaService.getVentasPorUsuarioId(usuarioId);
+            return ResponseEntity.ok(ventas);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al cargar las ventas del usuario.");
+        }
+    }
 }
